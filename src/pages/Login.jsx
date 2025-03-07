@@ -60,12 +60,11 @@ const Login = () => {
         alert("Invalid Username or Password");
       }
 
-      // setError({})
     }
   };
   return (
     <>
-      <div className="container:lg bg-transparent flex justify-center mt-32">
+      <div className="container:lg bg-transparent flex justify-center mt-10">
         <form onSubmit={handleSubmit}>
           <h1 className="text-white font-semibold my-4 text-center">Login</h1>
           <p className="text-white font-thin my-4 mb-14 text-center">
