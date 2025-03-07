@@ -3,11 +3,13 @@ import "./style.css";
 const Navbar = () => {
   return (
     <>
-      <nav className="py-4 w-96 mx-auto">
-        <ul className="flex">
+      <nav className="py-4">
+        <ul className="flex flex-col sm:flex-col lg:flex-row justify-center">
           <NavLink
             className={(e) => {
-              return e.isActive ? "bg-slate-200 text-slate-800 py-3 hover:text-slate-900" : "text-white py-3";
+              return e.isActive
+                ? "bg-slate-200 text-slate-800 py-3 hover:text-slate-900"
+                : "text-white py-3";
             }}
             to="/"
           >
@@ -15,7 +17,9 @@ const Navbar = () => {
           </NavLink>
           <NavLink
             className={(e) => {
-              return e.isActive ? "bg-slate-200 text-slate-800 py-3 hover:text-slate-900" : "text-white py-3";
+              return e.isActive
+                ? "bg-slate-200 text-slate-800 py-3 hover:text-slate-900"
+                : "text-white py-3";
             }}
             to="/login"
           >
@@ -23,7 +27,9 @@ const Navbar = () => {
           </NavLink>
           <NavLink
             className={(e) => {
-              return e.isActive ? "bg-slate-200 text-slate-800 py-3 hover:text-slate-900" : "text-white py-3";
+              return e.isActive
+                ? "bg-slate-200 text-slate-800 py-3 hover:text-slate-900"
+                : "text-white py-3";
             }}
             to="/register"
           >
