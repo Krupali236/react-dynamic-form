@@ -1,53 +1,47 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import './style.css';
+
 const Login = () => {
   const navigate = useNavigate();
-  const [input, setInput] = useState({});
+  const [input, setInput] = useState({ email: "", password: "" });
   const [isVisible, setVisible] = useState(false);
-  const [errors, setError] = useState({});
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInput((input) => ({
-      ...input,
+    setInput((prevInput) => ({
+      ...prevInput,
       [name]: value,
     }));
-    console.log(input, "register input");
   };
 
-  const handleOnClick = () => {
-    setVisible((isVisible) => !isVisible);
-    // console.log("Cick");
-  };
+  const handleOnClick = () => setVisible((prev) => !prev);
 
-  const isValid = (value) => {
-    const handleError = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Standard email validation
-    const passwordRegex =
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
+  const validateFields = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
-    if (!value?.email) {
-      handleError.email = "please Enter email";
-    } else if (!emailRegex.test(value?.email)) {
-      handleError.email = "please enter valid email";
+    if (!input.email) {
+      newErrors.email = "Please enter your email";
+    } else if (!emailRegex.test(input.email)) {
+      newErrors.email = "Please enter a valid email";
     }
 
-    if (!value?.password) {
-      handleError.password = "Please Enter password";
-    } else if (!passwordRegex.test(value?.password)) {
-      handleError.password = "please enter valid password";
+    if (!input.password) {
+      newErrors.password = "Please enter your password";
+    } else if (!passwordRegex.test(input.password)) {
+      newErrors.password =
+        "Password must be at least 8 characters with uppercase, lowercase, and a number";
     }
-    setError(handleError);
-    console.log(Object.keys(handleError), "errors OBject");
-    return Object.keys(handleError).length === 0;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submit");
-    const validation = isValid(input);
-    if (validation) {
-      console.log(input, "input");
+    if (validateFields()) {
       const userData = JSON.parse(localStorage.getItem("users")) || [];
       const user = userData.find(
         (user) => user.email === input.email && user.password === input.password
@@ -59,101 +53,90 @@ const Login = () => {
       } else {
         alert("Invalid Username or Password");
       }
-
     }
   };
-  return (
-    <>
-      <div className="container:lg bg-transparent flex justify-center mt-10">
-        <form onSubmit={handleSubmit}>
-          <h1 className="text-white font-semibold my-4 text-center">Login</h1>
-          <p className="text-white font-thin my-4 mb-14 text-center">
-            Enter your crendentials to connect{" "}
-          </p>
 
-          <div className="my-4">
+  return (
+    <div className="flex justify-center items-center min-h-screen px-4">
+      <div className="p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 className="text-5xl font-bold text-center text-white my-3">Login</h1>
+        <p className="font-thin text-white text-center mb-6">
+          Enter your credentials to connect
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email Input */}
+          <div>
             <input
               type="email"
               name="email"
-              value={input?.email || ""}
-              placeholder="email"
-              className={
-                errors?.email
-                  ? "bg-white bg-opacity-75 w-96 p-3 rounded-lg font-semibold text-lg border-2 border-solid border-red-700"
-                  : "bg-white bg-opacity-75 w-96 p-3 rounded-lg font-semibold text-lg"
-              }
-              onChange={(e) => {
-                handleChange(e);
-              }}
+              value={input.email}
+              placeholder="Email"
+              className={`w-full p-3 border rounded-lg focus:outline-none ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              }`}
+              onChange={handleChange}
             />
-            {errors?.email && (
-              <div className="text-red-700">{errors?.email}</div>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
 
-          <div className="my-4 relative">
+          {/* Password Input */}
+          <div className="relative">
             <input
               type={isVisible ? "text" : "password"}
               name="password"
-              value={input?.password || ""}
-              placeholder="password"
-              className={
-                errors?.password
-                  ? "bg-white bg-opacity-75 w-96 p-3 rounded-lg font-semibold text-lg border-2 border-solid border-red-700"
-                  : "bg-white bg-opacity-75 w-96 p-3 rounded-lg font-semibold text-lg"
-              }
-              onChange={(e) => {
-                handleChange(e);
-              }}
+              value={input.password}
+              placeholder="Password"
+              className={`w-full p-3 border rounded-lg focus:outline-none ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              }`}
+              onChange={handleChange}
             />
             <i
-              className={
-                isVisible
-                  ? "fa-solid fa-eye absolute right-4 top-4 cursor-pointer"
-                  : "fa-solid fa-eye-slash absolute right-4 top-5 cursor-pointer"
-              }
+              className={`absolute right-4 top-4 text-gray-600 cursor-pointer ${
+                isVisible ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"
+              }`}
               onClick={handleOnClick}
             ></i>
-            {errors?.password && (
-              <div className="text-red-700">{errors?.password}</div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
           </div>
-          <div className="my-12">
-            <button
-              type="submit"
-              className="w-96 bg-slate-800 bg-opacity-90 text-white"
-            >
-              Submit
-            </button>
-          </div>
 
-          <div className="mt-12">
-            <p className="text-white">
-              {" "}
-              Don't have an account ?
-              <a
-                href=""
-                className="text-white font-thin"
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-slate-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-all"
+          >
+            Submit
+          </button>
+
+          {/* Register & Home Links */}
+          <div className="text-center">
+            <p className="text-gray-600">
+              Don't have an account?{" "}
+              <span
+                className="text-blue-500 cursor-pointer hover:underline"
                 onClick={() => navigate("/register")}
               >
                 Register here!
-              </a>
+              </span>
             </p>
-          </div>
-          <div className="mt-5">
-            <p className="text-white">
-              <a
-                href=""
-                className="text-white font-thin"
+            <p className="text-gray-600 mt-3">
+              <span
+                className="text-blue-500 cursor-pointer hover:underline"
                 onClick={() => navigate("/")}
               >
                 Back to Home Page
-              </a>
+              </span>
             </p>
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
+
 export default Login;
